@@ -440,7 +440,8 @@ static inline void pmfs_update_time_and_size(struct inode *inode,
 }
 
 /* assumes the length to be 4-byte aligned */
-static inline void memset_nt(void *dest, uint32_t dword, size_t length)
+// static inline void memset_nt(void *dest, uint32_t dword, size_t length)
+noinline static void memset_nt(void *dest, uint32_t dword, size_t length)
 {
 	uint64_t dummy1, dummy2;
 	uint64_t qword = ((uint64_t)dword << 32) | dword;
