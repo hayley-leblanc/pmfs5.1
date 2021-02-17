@@ -235,7 +235,7 @@ static int pmfs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
 	struct super_block *sb = dir->i_sb;
 	pmfs_transaction_t *trans;
 	// timing_t create_time;
-	struct timespec create_time;
+	struct timespec create_time = {0,0};
 
 	PMFS_START_TIMING(create_t, create_time);
 	/* two log entries for new inode, 1 lentry for dir inode, 1 for dir
@@ -418,7 +418,7 @@ static int pmfs_unlink(struct inode *dir, struct dentry *dentry)
 	struct super_block *sb = inode->i_sb;
 	struct pmfs_inode *pi = pmfs_get_inode(sb, inode->i_ino);
 	// timing_t unlink_time;
-	struct timespec unlink_time;
+	struct timespec unlink_time = {0,0};
 
 	PMFS_START_TIMING(unlink_t, unlink_time);
 
@@ -514,9 +514,15 @@ static int pmfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 	/*de->file_type =  S_IFDIR; */
 	pmfs_memlock_range(sb, blk_base, sb->s_blocksize);
 
+	// appears to be some kind of memory corruption issue here; 
+	// if this printk is not present, it attempts to flush 11840 bytes 
+	// which is obviously incorrect. Come back with a debugger and check this out later
+	printk(KERN_INFO "flushing %u\n", PMFS_DIR_REC_LEN(1) +
+			PMFS_DIR_REC_LEN(2));
 	/* No need to journal the dir entries but we need to persist them */
 	pmfs_flush_buffer(blk_base, PMFS_DIR_REC_LEN(1) +
 			PMFS_DIR_REC_LEN(2), true);
+	// pmfs_flush_buffer(blk_base, 32, true);
 
 	set_nlink(inode, 2);
 

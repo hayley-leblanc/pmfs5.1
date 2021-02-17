@@ -254,6 +254,8 @@ noinline static void PERSISTENT_BARRIER(void)
 noinline static void pmfs_flush_buffer(void *buf, uint32_t len, bool fence)
 {
 	uint32_t i;
+	// printk(KERN_INFO "pmfs flush len: %u\n", len);
+	// printk(KERN_INFO "pmfs flush addr: %p\n\n", buf);
 	len = len + ((unsigned long)(buf) & (CACHELINE_SIZE - 1));
 	if (support_clwb) {
 		for (i = 0; i < len; i += CACHELINE_SIZE)
