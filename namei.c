@@ -519,9 +519,10 @@ static int pmfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 	// which is obviously incorrect. Come back with a debugger and check this out later
 	printk(KERN_INFO "flushing %u\n", PMFS_DIR_REC_LEN(1) +
 			PMFS_DIR_REC_LEN(2));
+	uint32_t len = PMFS_DIR_REC_LEN(1) +
+			PMFS_DIR_REC_LEN(2);
 	/* No need to journal the dir entries but we need to persist them */
-	pmfs_flush_buffer(blk_base, PMFS_DIR_REC_LEN(1) +
-			PMFS_DIR_REC_LEN(2), true);
+	pmfs_flush_buffer(blk_base, len, true);
 	// pmfs_flush_buffer(blk_base, 32, true);
 
 	set_nlink(inode, 2);
