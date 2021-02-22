@@ -129,6 +129,7 @@ static long pmfs_fallocate(struct file *file, int mode, loff_t offset,
 	}
 	pi->i_mtime = cpu_to_le32(inode->i_mtime.tv_sec);
 	pi->i_ctime = cpu_to_le32(inode->i_ctime.tv_sec);
+	pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pi);
 
 	pmfs_commit_transaction(sb, trans);

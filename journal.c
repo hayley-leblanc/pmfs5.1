@@ -127,6 +127,7 @@ static void pmfs_flush_transaction(struct super_block *sb,
 			data = pmfs_get_block(sb,le64_to_cpu(le->addr_offset));
 			if (sbi->redo_log) {
 				pmfs_memunlock_range(sb, data, le->size);
+				pmfs_flush_buffer(data, le->size, false);
 				memcpy(data, le->data, le->size);
 				pmfs_memlock_range(sb, data, le->size);
 			} else

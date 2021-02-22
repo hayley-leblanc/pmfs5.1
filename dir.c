@@ -218,6 +218,7 @@ int pmfs_remove_entry(pmfs_transaction_t *trans, struct dentry *de,
 	pmfs_memunlock_inode(sb, pidir);
 	pidir->i_mtime = cpu_to_le32(dir->i_mtime.tv_sec);
 	pidir->i_ctime = cpu_to_le32(dir->i_ctime.tv_sec);
+	pmfs_flush_buffer(pidir, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pidir);
 	retval = 0;
 out:

@@ -46,6 +46,7 @@ static void pmfs_clear_datablock_inode(struct super_block *sb)
 
 	pmfs_memunlock_inode(sb, pi);
 	memset(pi, 0, MAX_DATA_PER_LENTRY);
+	pmfs_flush_buffer(pi, MAX_DATA_PER_LENTRY, false);
 	pmfs_memlock_inode(sb, pi);
 
 	/* commit the transaction */
@@ -135,6 +136,7 @@ static int pmfs_allocate_datablock_block_inode(pmfs_transaction_t *trans,
 	pi->height = 0;
 	pi->i_dtime = 0; 
 	pi->i_size = cpu_to_le64(num_blocks << sb->s_blocksize_bits);
+	pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pi);
 
 	errval = __pmfs_alloc_blocks(trans, sb, pi, 0, num_blocks, false);

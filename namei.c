@@ -398,6 +398,7 @@ static int pmfs_link(struct dentry *dest_dentry, struct inode *dir,
 		pmfs_memunlock_inode(sb, pi);
 		pi->i_ctime = cpu_to_le32(inode->i_ctime.tv_sec);
 		pi->i_links_count = cpu_to_le16(inode->i_nlink);
+		pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 		pmfs_memlock_inode(sb, pi);
 
 		d_instantiate(dentry, inode);
@@ -446,6 +447,7 @@ static int pmfs_unlink(struct inode *dir, struct dentry *dentry)
 		pi->i_links_count = cpu_to_le16(inode->i_nlink);
 	}
 	pi->i_ctime = cpu_to_le32(inode->i_ctime.tv_sec);
+	pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pi);
 
 	pmfs_commit_transaction(sb, trans);
@@ -537,6 +539,7 @@ static int pmfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 	pmfs_memunlock_inode(sb, pi);
 	pi->i_links_count = cpu_to_le16(inode->i_nlink);
 	pi->i_size = cpu_to_le64(inode->i_size);
+	pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pi);
 
 	pidir = pmfs_get_inode(sb, dir->i_ino);
@@ -664,6 +667,7 @@ static int pmfs_rmdir(struct inode *dir, struct dentry *dentry)
 	pmfs_memunlock_inode(sb, pi);
 	pi->i_links_count = cpu_to_le16(inode->i_nlink);
 	pi->i_ctime = cpu_to_le32(inode->i_ctime.tv_sec);
+	pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 	pmfs_memlock_inode(sb, pi);
 
 	/* add the inode to truncate list in case a crash happens before the
@@ -763,6 +767,7 @@ static int pmfs_rename(struct inode *old_dir,
 		if (new_inode->i_nlink)
 			drop_nlink(new_inode);
 		pi->i_links_count = cpu_to_le16(new_inode->i_nlink);
+		pmfs_flush_buffer(pi, sizeof(struct pmfs_inode), false);
 		pmfs_memlock_inode(sb, pi);
 
 		if (!new_inode->i_nlink)
