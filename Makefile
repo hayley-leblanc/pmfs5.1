@@ -1,7 +1,7 @@
 #
 # Makefile for the linux pmfs-filesystem routines.
 #
-CFLAGS_pmfs.o := O0
+CFLAGS_pmfs.o := -O0 -g
 obj-m += pmfs.o
 
 pmfs-y := bbuild.o balloc.o dir.o file.o inode.o namei.o super.o symlink.o ioctl.o pmfs_stats.o journal.o xip.o wprotect.o
