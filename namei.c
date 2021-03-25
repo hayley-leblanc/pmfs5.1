@@ -517,16 +517,9 @@ static int pmfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 	/*de->file_type =  S_IFDIR; */
 	pmfs_memlock_range(sb, blk_base, sb->s_blocksize);
 
-	// appears to be some kind of memory corruption issue here; 
-	// if this printk is not present, it attempts to flush 11840 bytes 
-	// which is obviously incorrect. Come back with a debugger and check this out later
-	len = PMFS_DIR_REC_LEN(1) + PMFS_DIR_REC_LEN(2);
-	printk(KERN_INFO "flushing %u\n", len);
 	/* No need to journal the dir entries but we need to persist them */
-	pmfs_flush_buffer(blk_base, len, true);
-	// pmfs_flush_buffer(blk_base, PMFS_DIR_REC_LEN(1) +
-	// 		PMFS_DIR_REC_LEN(2), true);
-	// pmfs_flush_buffer(blk_base, 32, true);
+	pmfs_flush_buffer(blk_base, PMFS_DIR_REC_LEN(1) +
+			PMFS_DIR_REC_LEN(2), true);
 
 	set_nlink(inode, 2);
 
