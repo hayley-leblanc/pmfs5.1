@@ -56,4 +56,4 @@ There are two scripts provided in the source code, `setup-pmfs.sh` and `remount-
 ## Branches
 
 - `master`: main branch
-- `bug1`: has a bug triggered by crashing within the `truncate()` system call, also described here: https://github.com/NVSL/PMFS-new/issues/6. The tester must be run with the `-c` flag to do brute force testing to trigger this bug. The bug can be triggered by running ACE test seq1/j-lang3.cpp and causes the system to crash when the crash state is mounted. 
+- `bug1`: has a bug triggered by crashing within the `truncate()` system call, also described here: https://github.com/NVSL/PMFS-new/issues/6. The tester must be run with the `-c` flag to do brute force testing to trigger this bug. The bug can be triggered by running ACE test seq1/j-lang54.cpp and causes the system to crash when the crash state is mounted. 
