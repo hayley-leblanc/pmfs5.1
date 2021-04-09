@@ -52,3 +52,8 @@ There are two scripts provided in the source code, `setup-pmfs.sh` and `remount-
 * PMFS does not currently support extended attributes or ACL.
 * PMFS requires the underlying block device to support DAX (Direct Access) feature.
 * This project cuts some features of the original PMFS, such as memory protection and huge mmap support. If you need these features, please turn to the original PMFS.
+
+## Branches
+
+- `master`: main branch
+- `bug1`: has a bug triggered by crashing within the `truncate()` system call, also described here: https://github.com/NVSL/PMFS-new/issues/6. The tester must be run with the `-c` flag to do brute force testing to trigger this bug. The bug can be triggered by running ACE test seq1/j-lang3.cpp and causes the system to crash when the crash state is mounted. 
